@@ -17,7 +17,7 @@ RUN apt-get update \
 RUN mkdir /root/camb \
     && curl -L https://github.com/cmbant/camb/tarball/003abb6 | tar zxf - -C /root/camb --strip=1 \
     && cd /root/camb/pycamb \
-    && python setup.py install
+    && python3 setup.py install
 
 # install julia 0.6
 RUN mkdir /root/julia \
