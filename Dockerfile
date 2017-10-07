@@ -3,15 +3,15 @@ FROM ubuntu:16.04
 RUN apt-get update \
     && apt-get install -y \
         curl \
-        cython \
+        cython3 \
         gfortran \
-        python-matplotlib \
-        python-numpy \
-        python-pip \
-        python-scipy \
-        python-seaborn \
-        python-zmq \
-    && pip install jupyter
+        python3-matplotlib \
+        python3-numpy \
+        python3-pip \
+        python3-scipy \
+        python3-seaborn \
+        python3-zmq \
+    && pip3 install jupyter
 
 # install camb
 RUN mkdir /root/camb \
