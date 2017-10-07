@@ -31,8 +31,7 @@ RUN PYTHON=python3 julia -e 'for pkg=["IJulia","PyPlot","FITSIO","Interpolations
 
 
 RUN apt-get install -y python3-pip \
-    && pip3 install --no-cache-dir jupyterhub==0.7.2 
-#${JUPYTERHUB_VERSION}
+    && pip3 install --no-cache-dir jupyterhub==${JUPYTERHUB_VERSION}
 
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
