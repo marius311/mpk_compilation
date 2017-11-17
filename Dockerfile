@@ -5,41 +5,56 @@ RUN apt-get update \
         curl \
         cython3 \
         gfortran \
+        libgsl-dev \
         python3-matplotlib \
         python3-numpy \
         python3-pip \
         python3-scipy \
         python3-seaborn \
         python3-zmq \
-    && pip3 install jupyter
+    && pip3 install --no-cache-dir notebook==5.* \
+    && rm -rf /var/lib/apt/lists/*
 
-# install camb
-RUN mkdir /root/camb \
-    && curl -L https://github.com/cmbant/camb/tarball/003abb6 | tar zxf - -C /root/camb --strip=1 \
-    && cd /root/camb/pycamb \
-    && python3 setup.py install
+# install julia 0.6.1
+RUN mkdir /opt/julia \
+    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.1-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
+    && ln -s /opt/julia/bin/julia /usr/local/bin
 
-# install julia 0.6
-RUN mkdir /root/julia \
-    && curl -L https://julialang.s3.amazonaws.com/bin/linux/x64/0.6/julia-0.6.0-linux-x86_64.tar.gz | tar -C /root/julia -xz --strip=1 -f - \
-    && ln -s /root/julia/bin/julia /usr/local/bin
-
-RUN PYTHON=python3 julia -e 'for pkg=["IJulia","PyPlot","FITSIO","Interpolations"]; Pkg.add(pkg); @eval using $(Symbol(pkg)); end'
-
-# COPY tegfig.ipynb COM_PowerSpect_CMB_R2.02.fits /root/shared/
-# COPY plik_lite_v18_TTTEEE.clik /root/shared/plik_lite_v18_TTTEEE.clik
-
-
-RUN apt-get install -y python3-pip \
-    && pip3 install --no-cache-dir jupyterhub==${JUPYTERHUB_VERSION}
-
-# Make sure the contents of our repo are in ${HOME}
-COPY . ${HOME}
-USER root
-RUN chown -R ${NB_USER}:${NB_GID} ${HOME}
+# setup unprivileged user needed for mybinder.org
+ENV NB_USER marius
+ENV NB_UID 1000
+ENV HOME /home/${NB_USER}
+RUN adduser --disabled-password --gecos "Default user" --uid ${NB_UID} ${NB_USER}
 USER ${NB_USER}
 
 
+# install CAMB
+RUN mkdir $HOME/camb \
+    && curl -L https://github.com/cmbant/camb/tarball/0.1.6.1 | tar zxf - -C $HOME/camb --strip=1 \
+    && cd $HOME/camb/pycamb \
+    && python3 setup.py install --user
 
-WORKDIR /root/shared
+
+# install the Feb 2009 version of CAMB needed for the P_halo(k) calculation 
+# we also need camb4py since this old CAMB version doesn't have its own Python wrapper
+COPY --chown=marius camb-feb09/Makefile $HOME/camb-feb09/Makefile
+RUN mkdir $HOME/lrgdr7like $HOME/camb4py \
+    && curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $HOME/camb-feb09 --strip=1 --skip-old-files\
+    && curl -L https://lambda.gsfc.nasa.gov/toolbox/lrgdr/lrgdr7like.tar.gz | tar zxf - -C $HOME/lrgdr7like \
+    && cd $HOME/lrgdr7like/CAMBfeb09patch \
+    && cp inidriver.F90 modules.f90 bsplinepk.c $HOME/camb-feb09 \
+    && cd $HOME/camb-feb09 \
+    && make \
+    && curl -L https://github.com/marius311/camb4py/tarball/a4e57fd | tar zxf - -C $HOME/camb4py --strip=1 \
+    && cd $HOME/camb4py \
+    && python3 setup.py build --no-builtin install --user
+
+
+
+RUN PYTHON=python3 julia -e 'for pkg=["IJulia","PyPlot","FITSIO","Interpolations"]; Pkg.add(pkg); @eval using $(Symbol(pkg)); end'
+
+# COPY tegfig.ipynb COM_PowerSpect_CMB_R2.02.fits $HOME/shared/
+# COPY plik_lite_v18_TTTEEE.clik $HOME/shared/plik_lite_v18_TTTEEE.clik
+
+WORKDIR $HOME/shared
 CMD jupyter-notebook --ip=* --no-browser
