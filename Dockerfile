@@ -37,9 +37,9 @@ RUN mkdir $HOME/camb \
 
 # install the Feb 2009 version of CAMB needed for the P_halo(k) calculation 
 # we also need camb4py since this old CAMB version doesn't have its own Python wrapper
-COPY --chown=marius camb-feb09/Makefile $HOME/camb-feb09/Makefile
-RUN mkdir $HOME/lrgdr7like $HOME/camb4py \
-    && curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $HOME/camb-feb09 --strip=1 --skip-old-files\
+RUN mkdir $HOME/lrgdr7like $HOME/camb4py $HOME/camb-feb09
+COPY camb-feb09/Makefile $HOME/camb-feb09/Makefile
+RUN curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $HOME/camb-feb09 --strip=1 --skip-old-files\
     && curl -L https://lambda.gsfc.nasa.gov/toolbox/lrgdr/lrgdr7like.tar.gz | tar zxf - -C $HOME/lrgdr7like \
     && cd $HOME/lrgdr7like/CAMBfeb09patch \
     && cp inidriver.F90 modules.f90 bsplinepk.c $HOME/camb-feb09 \
