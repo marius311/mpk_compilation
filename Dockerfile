@@ -53,8 +53,9 @@ RUN curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $
 
 RUN PYTHON=python3 julia -e 'for pkg=["IJulia","PyPlot","FITSIO","Interpolations"]; Pkg.add(pkg); @eval using $(Symbol(pkg)); end'
 
-# COPY tegfig.ipynb COM_PowerSpect_CMB_R2.02.fits $HOME/shared/
-# COPY plik_lite_v18_TTTEEE.clik $HOME/shared/plik_lite_v18_TTTEEE.clik
+RUN mkdir $HOME/shared
+COPY tegfig.ipynb COM_PowerSpect_CMB_R2.02.fits $HOME/shared/
+COPY plik_lite_v18_TTTEEE.clik $HOME/shared/plik_lite_v18_TTTEEE.clik
 
 WORKDIR $HOME/shared
 CMD jupyter-notebook --ip=* --no-browser
