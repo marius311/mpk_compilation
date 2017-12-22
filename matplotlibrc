@@ -1,0 +1,22 @@
+xtick.top       : True
+xtick.bottom    : True
+xtick.direction : in
+xtick.labelsize : 12
+
+ytick.left      : True
+ytick.right     : True
+ytick.direction : in
+ytick.labelsize : 12
+
+axes.labelsize  : 16
+axes.titlesize  : 16
+
+errorbar.capsize : 4
+
+legend.frameon  : False
+legend.fontsize : 12
+
+figure.dpi      : 100
+figure.figsize  : 6.4, 4.8
+
+mathtext.fontset : cm
