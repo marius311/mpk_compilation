@@ -52,14 +52,19 @@ RUN curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $
     && cd $HOME/src/camb4py \
     && python3 setup.py build --no-builtin install --user
 
-
 # install and precompile the Julia packages we need (listed in REQUIRE)
 COPY REQUIRE $HOME/REQUIRE
 RUN PYTHON=python3 julia -e "Pkg.init(); mv(\"$HOME/REQUIRE\",Pkg.dir(\"REQUIRE\"),remove_destination=true); Pkg.resolve(); for p in Pkg.available(); try @eval using \$(Symbol(p)); println(p); end; end"
 
+# copy notebook and data into container
+RUN mkdir $HOME/shared
 COPY shared/tegfig.ipynb $HOME/shared/tegfig.ipynb
 COPY dat $HOME/dat
 COPY matplotlibrc $HOME/.config/matplotlib/matplotlibrc
 WORKDIR $HOME/shared
 
-CMD jupyter-notebook --ip=* --no-browser
+# we don't actually need to specify a port different than 8888 inside the
+# container, but this makes it so Jupyter prints the accurate URL to connect to
+# on startup
+ENV PORT 8888
+CMD jupyter-notebook --ip=* --no-browser --port $PORT

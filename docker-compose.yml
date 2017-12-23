@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  tegfig:
+    image: marius311/tegmark_zaldarriaga_figure
+    build: .
+    volumes:
+     - "./shared:/home/cosmo/shared"
+     - "./dat:/home/cosmo/shared/dat"
+     - "./matplotlibrc:/home/cosmo/.config/matplotlib/matplotlibrc"
+    ports: 
+     - "${PORT:-8888}:${PORT:-8888}"
+    environment:
+     - PORT=${PORT:-8888}
