@@ -22,7 +22,7 @@ RUN apt-get update \
 
 # install julia 0.6.1
 RUN mkdir /opt/julia \
-    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.1-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
+    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.3-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
     && ln -s /opt/julia/bin/julia /usr/local/bin
 
 # setup unprivileged user needed for mybinder.org
@@ -34,7 +34,7 @@ USER cosmo
 
 # install CAMB
 RUN mkdir -p $HOME/src/camb \
-    && curl -L https://github.com/cmbant/camb/tarball/0.1.6.1 | tar zxf - -C $HOME/src/camb --strip=1 \
+    && curl -L https://github.com/cmbant/camb/tarball/6fc83ba | tar zxf - -C $HOME/src/camb --strip=1 \
     && cd $HOME/src/camb/pycamb \
     && python3 setup.py install --user
 
