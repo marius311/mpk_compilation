@@ -10,5 +10,6 @@ services:
      - "./matplotlibrc:/home/cosmo/.config/matplotlib/matplotlibrc"
     ports: 
      - "${PORT:-8888}:${PORT:-8888}"
+    hostname: localhost
     environment:
      - PORT=${PORT:-8888}
