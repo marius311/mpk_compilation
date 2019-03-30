@@ -1,0 +1,8 @@
+[deps]
+FITSIO = "525bcba6-941b-5504-bd06-fd0dc1a4d2eb"
+IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
+Optim = "429524aa-4258-5aef-a3af-852621145aeb"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"

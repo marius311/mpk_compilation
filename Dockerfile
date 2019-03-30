@@ -4,6 +4,7 @@ RUN apt-get update \
     && apt-get install -y \
         curl \
         cython3 \
+        expect \
         gfortran \
         libcfitsio2 \
         libgsl-dev \
@@ -20,9 +21,9 @@ RUN apt-get update \
     && jupyter nbextension enable toc2/main --system \
     && rm -rf /var/lib/apt/lists/*
 
-# install julia 0.6.1
+# install julia 1.1.0
 RUN mkdir /opt/julia \
-    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.3-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
+    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/1.1/julia-1.1.0-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
     && ln -s /opt/julia/bin/julia /usr/local/bin
 
 # setup unprivileged user needed for mybinder.org
@@ -52,9 +53,9 @@ RUN curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $
     && cd $HOME/src/camb4py \
     && python3 setup.py build --no-builtin install --user
 
-# install and precompile the Julia packages we need (listed in REQUIRE)
-COPY REQUIRE $HOME/REQUIRE
-RUN PYTHON=python3 julia -e "Pkg.init(); mv(\"$HOME/REQUIRE\",Pkg.dir(\"REQUIRE\"),remove_destination=true); Pkg.resolve(); for p in Pkg.available(); try @eval using \$(Symbol(p)); println(p); end; end"
+# install and precompile the Julia packages we need (listed in Project.toml)
+COPY --chown=1000 Project.toml Manifest.toml $HOME/.julia/environments/v1.1/
+RUN PYTHON=python3 julia -e 'using Pkg; Pkg.REPLMode.pkgstr("resolve; build; precompile")'
 
 # copy notebook and data into container
 RUN mkdir $HOME/shared
@@ -67,4 +68,5 @@ WORKDIR $HOME/shared
 # container, but this makes it so Jupyter prints the accurate URL to connect to
 # on startup
 ENV PORT 8888
-CMD jupyter-notebook --ip=* --no-browser --port $PORT
+# the pipe to sed can be removed once https://github.com/jupyter/notebook/pull/4103 hits a release
+CMD unbuffer jupyter-notebook --ip=0.0.0.0 --no-browser --port $PORT 2>&1 | sed -ue "s/(localhost or 127.0.0.1)/localhost/g"
