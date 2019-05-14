@@ -20,7 +20,7 @@ PORT=8888; docker run --rm -e PORT=$PORT -itp $PORT:$PORT marius311/mpk_compilat
 
 You will be prompted with a link to open the notebook in your browser. You can change the port from 8888 if you wish. 
 
-If you wish to develop this repository or to have changes to the notebook saved between sessions, you can clone this repository and run:
+If you wish to develop this repository or to have changes to the notebook saved between sessions, you can clone this repository and run locally via:
 
 ```bash
 git clone https://github.com/marius311/mpk_compilation
