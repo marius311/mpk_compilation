@@ -69,4 +69,4 @@ WORKDIR $HOME/notebooks
 # on startup
 ENV PORT 8888
 # the pipe to sed can be removed once https://github.com/jupyter/notebook/pull/4103 hits a release
-CMD unbuffer jupyter-notebook --ip=0.0.0.0 --no-browser --port $PORT 2>&1 | sed -ue "s/(localhost or 127.0.0.1)/localhost/g"
+CMD unbuffer jupyter-notebook --ip=0.0.0.0 --no-browser --port $PORT 2>&1 | sed -ue "s/(.* or 127.0.0.1)/localhost/g"
