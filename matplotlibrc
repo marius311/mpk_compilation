@@ -1,17 +1,17 @@
 xtick.top       : True
 xtick.bottom    : True
 xtick.direction : in
-xtick.labelsize : 12
+xtick.labelsize : 11
 
 ytick.left      : True
 ytick.right     : True
 ytick.direction : in
-ytick.labelsize : 12
+ytick.labelsize : 11
 
-axes.labelsize  : 16
-axes.titlesize  : 16
+axes.labelsize  : 13
+axes.titlesize  : 13
 
-errorbar.capsize : 4
+errorbar.capsize : 2
 
 legend.frameon  : False
 legend.fontsize : 12

@@ -2,11 +2,11 @@ version: "3"
 
 services:
   tegfig:
-    image: marius311/tegmark_zaldarriaga_figure
+    image: marius311/mpk_compilation
     build: .
     volumes:
-     - "./shared:/home/cosmo/shared"
-     - "./dat:/home/cosmo/shared/dat"
+     - "./notebooks:/home/cosmo/notebooks"
+     - "./dat:/home/cosmo/notebooks/dat-volume"
      - "./matplotlibrc:/home/cosmo/.config/matplotlib/matplotlibrc"
     ports: 
      - "${PORT:-8888}:${PORT:-8888}"

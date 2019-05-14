@@ -1,33 +1,27 @@
-# The Tegmark & Zaldarriaga Figure
-
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/marius311/tegmark_zaldarriaga_figure/binder?filepath=tegfig.ipynb)
+# Matter power spectrum compilation
 
 
 In their [2002 paper](https://arxiv.org/abs/astro-ph/0207047), Max Tegmark and Mattias Zaldarriaga developed a method for compressing the information from several different types of cosmological probes into constraints on the power spectrum of matter fluctuations in the universe. In doing so, they created one of the iconic figures in cosmology, summarizing information from a range of vastly different observations and showing these were all consistent with the predicitions from the simple ΛCDM model of cosmology. 
 
-This repository provides a [Jupyter](http://jupyter.org/) notebook written in the [Julia](https://julialang.org/) programming language which recreates this figure for modern data. The notebook, along with all dependencies pre-installed, is available as a "binder" on [https://mybinder.org/](https://mybinder.org/), so with one click you'll have everything running. 
+We have updated this figure in [Chabanier et al. 2019](link-not-live-yet) and [Planck 2018: I](https://arxiv.org/abs/1807.06205) to include recent cosmological data, and provide this repository so others can contribute to keeping this compilation up-to-date. 
 
-Try it here: [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/marius311/tegmark_zaldarriaga_figure/binder?filepath=tegfig.ipynb)
+This repository comes in the form a [Jupyter](http://jupyter.org/) notebook packaged inside of a Docker container, so that it is trivial to install the (fairly complex) set of dependencies needed for this calculation. 
 
+The easiest way to run this notebook is to [install Docker](https://docs.docker.com/install/) then run:
 
-The aim of this repository is to maintain a reproducible, readable, and easily modifiable code for producing this important and useful figure. Contributions are very welcome!
+```bash
+docker run --rm -itp 8888:8888 marius311/mpk_compilation
+```
 
+You will be prompted with a link to open the notebook in your browser. 
 
-## Other ways to run the notebook. 
+If you wish to develop this repository or to have changes to the notebook saved between sessions, you can clone this repository and run locally:
 
-* To run the notebook locally, [install Docker](https://store.docker.com/search?type=edition&offering=community), then simply run:
+```bash
+git clone https://github.com/marius311/mpk_compilation
+cd mpk_compilation
+docker-compose pull # or replace "pull" with "build" to build the image locally
+docker-compose up
+```
 
-    ```
-    docker run --rm -itp 8888:8888 marius311/tegmark_zaldarriaga_figure
-    ```
-    
-* To make it so your changes to the notebook are saved, clone this repository and run the container from there with:
-
-    ```bash
-    git clone https://github.com/marius311/tegmark_zaldarriaga_figure
-    cd tegmark_zaldarriaga_figure
-    docker-compose pull # or replace "pull" with "build" to build the image locally
-    docker-compose up
-    ```
-
-* You can also run everything outside of Docker, see the Dockerifle for hints as to what you need to install on your system.
+Note: by default, we run the notebook at port 8888, if you already have a notebook running on this port, you can specify a different one via: `PORT=1234 docker-compose up`.

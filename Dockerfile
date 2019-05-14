@@ -58,11 +58,11 @@ COPY --chown=1000 Project.toml Manifest.toml $HOME/.julia/environments/v1.1/
 RUN PYTHON=python3 julia -e 'using Pkg; Pkg.REPLMode.pkgstr("resolve; build; precompile")'
 
 # copy notebook and data into container
-RUN mkdir $HOME/shared
-COPY shared/tegfig.ipynb $HOME/shared/tegfig.ipynb
+RUN mkdir $HOME/notebooks
+COPY notebooks/ $HOME/notebooks/
 COPY dat $HOME/dat
-COPY matplotlibrc $HOME/.config/matplotlib/matplotlibrc
-WORKDIR $HOME/shared
+COPY --chown=1000 matplotlibrc $HOME/.config/matplotlib/matplotlibrc
+WORKDIR $HOME/notebooks
 
 # we don't actually need to specify a port different than 8888 inside the
 # container, but this makes it so Jupyter prints the accurate URL to connect to
