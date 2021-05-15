@@ -1,12 +1,12 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 RUN apt-get update \
-    && apt-get install -y \
+    && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
         curl \
         cython3 \
         expect \
         gfortran \
-        libcfitsio2 \
+        libcfitsio-dev \
         libgsl-dev \
         python3-numpy \
         python3-pip \
@@ -15,15 +15,15 @@ RUN apt-get update \
     && pip3 install --no-cache-dir \
         notebook==5.* \
         jupyter_contrib_nbextensions==0.3.1 \ 
-        matplotlib==2.* \
+        matplotlib==3.4.* \
         setuptools==20.4 \
     && jupyter contrib nbextension install \
     && jupyter nbextension enable toc2/main --system \
     && rm -rf /var/lib/apt/lists/*
 
-# install julia 1.1.0
+# install julia
 RUN mkdir /opt/julia \
-    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/1.1/julia-1.1.0-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
+    && curl -L https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.1-linux-x86_64.tar.gz | tar zxf - -C /opt/julia --strip=1 \
     && ln -s /opt/julia/bin/julia /usr/local/bin
 
 # setup unprivileged user needed for mybinder.org
@@ -54,8 +54,8 @@ RUN curl -L https://github.com/cmbant/CAMB/archive/Feb09.tar.gz | tar zxf - -C $
     && python3 setup.py build --no-builtin install --user
 
 # install and precompile the Julia packages we need (listed in Project.toml)
-COPY --chown=1000 Project.toml Manifest.toml $HOME/.julia/environments/v1.1/
-RUN PYTHON=python3 julia -e 'using Pkg; Pkg.REPLMode.pkgstr("resolve; build; precompile")'
+COPY --chown=1000 Project.toml Manifest.toml $HOME/.julia/environments/v1.6/
+RUN PYTHON=python3 julia -e 'using Pkg; pkg"resolve; build; precompile"'
 
 # copy notebook and data into container
 RUN mkdir $HOME/notebooks
